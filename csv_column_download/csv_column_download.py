@@ -42,12 +42,16 @@ class CsvColumnDownloader:
         assert rows
         assert url_column in rows[0]
         assert name_column in rows[0]
-        self.output_dir = output_dir
         self.num_failed = 0
         self.failed = set()
         self.num_succeeded = 0
         self.already_downloaded = 0
         self.download_seconds = 0.0
+
+        if not os.path.isdir(output_dir):
+            logging.info("Attemptig to create output directory: %s", output_dir)
+            os.makedirs(output_dir)
+
         # Note: this is guaranteed to be a stable sort.
         # See https://wiki.python.org/moin/HowTo/Sorting/#Sort_Stability_and_Complex_Sorts.
         self.rows = sorted(rows, key=lambda d: d[name_column])
