@@ -8,6 +8,6 @@ description = "Download the URLs specified in a CSV column"
 authors = [
   {name = "David Faden", email = "dfaden@gmail.com"},
 ]
-version = "0.1.0"
+version = "1.0.0"
 license = {text = "MIT License"}
 dependencies = ["requests"]
