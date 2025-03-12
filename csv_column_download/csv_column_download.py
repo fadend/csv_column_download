@@ -13,8 +13,8 @@ import urllib
 import requests
 
 
-def read_csv(path: str) -> list[Mapping[str, str]]:
-    with open(path, "rt") as f:
+def read_csv(path: str, encoding="utf8") -> list[Mapping[str, str]]:
+    with open(path, "rt", encoding=encoding) as f:
         return list(csv.DictReader(f))
 
 
@@ -91,7 +91,7 @@ class CsvColumnDownloader:
                 continue
             self.num_succeeded += 1
         self.download_seconds = time.time() - start_seconds
-        with open(os.path.join(output_dir, "output.csv"), "wt") as f:
+        with open(os.path.join(output_dir, "output.csv"), "wt", encoding="utf8") as f:
             w = csv.DictWriter(f, fieldnames=list(self.rows[0].keys()))
             w.writeheader()
             w.writerows(self.rows)
@@ -139,9 +139,14 @@ if __name__ == "__main__":
         type=int,
         help="If set, the maximum number of downloads to attempt. Useful for testing.",
     )
+    parser.add_argument(
+        "--input_encoding",
+        default="utf8",
+        help="The encoding to use when opening the input CSV. Defaults to utf8.",
+    )
     args = parser.parse_args()
     downloader = CsvColumnDownloader(
-        rows=read_csv(args.input),
+        rows=read_csv(args.input, encoding=args.input_encoding),
         url_column=args.url_column,
         name_column=args.name_column,
         output_dir=args.output_dir,
